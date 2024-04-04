@@ -13,7 +13,7 @@ class KarabinerComplexMod
     end
 
     # TODO: 835 is actually "product_id"
-    def apple_keyboard_conditions
+    def build_apple_keyboard_conditions
       [
         {
           :type => "device_if",
@@ -29,38 +29,46 @@ class KarabinerComplexMod
       ]
     end
 
-    def capslock_to_esc_and_control_rule
+    def build_manipulator_target(keycode, modifiers = nil)
+      hash = {:key_code => keycode}
+      hash[:modifiers] = modifiers unless modifiers.nil?
+      hash
+    end
+
+    def build_basic_to_if_alone_manipulator (
+      from_target,
+      to_target,
+      to_if_alone_target
+    )
+      hash = {
+        :type => "basic",
+        :from => from_target,
+        :to => to_target,
+        :to_if_alone => to_if_alone_target
+      }
+      
+      conditions = build_apple_keyboard_conditions
+      hash[:conditions] = conditions unless conditions.nil?
+      hash
+    end
+
+    def build_capslock_to_esc_and_control_rule
+
+      from_target =        build_manipulator_target(:caps_lock, {:optional => ["any"]})
+      to_target =          [build_manipulator_target(:left_control)]
+      to_if_alone_target = [build_manipulator_target(:escape)]
+      
       {
         :description => "MBP Only: CapsLock is Esc on tap, Ctrl on mod",
         :manipulators => [
-          {
-            :type => "basic",
-            :from => {
-              :key_code => :caps_lock,
-              :modifiers => {
-                :optional => [
-                  "any"
-                ]
-              }
-            },
-            :to => [
-              {
-                :key_code => "left_control"
-              }
-            ],
-            :to_if_alone => [
-              {
-                :key_code => "escape"
-              }
-            ]
-          }.then do |h|
-              add_hash_node(:conditions, :apple_keyboard_conditions, h)
-          end
+          build_basic_to_if_alone_manipulator(
+            from_target, to_target, to_if_alone_target
+          )
         ]
       }
     end
 
-    def shift_keys_parens_on_tap_manipulator(from_key_code, to_key_code)
+    def build_shift_keys_parens_on_tap_manipulator(from_key_code, to_key_code)
       {
         :type => "basic",
         :from => {
@@ -80,21 +88,21 @@ class KarabinerComplexMod
           }
         ],
       }.then do |h|
-        add_hash_node(:conditions, :apple_keyboard_conditions, h)
+        add_hash_node(:conditions, :build_apple_keyboard_conditions, h)
       end
     end
 
-    def shift_keys_parens_on_tap_rule
+    def build_shift_keys_parens_on_tap_rule
       {
         :description => "MBP Only: Shift keys are parens on tap",
         :manipulators => [
-          shift_keys_parens_on_tap_manipulator(:left_shift, "9"),
-          shift_keys_parens_on_tap_manipulator(:right_shift, "0")
+          build_shift_keys_parens_on_tap_manipulator(:left_shift, "9"),
+          build_shift_keys_parens_on_tap_manipulator(:right_shift, "0")
         ]
       }
     end
 
-    def both_shifts_to_capslock_manipulator(shift_key_code)
+    def build_shift_to_capslock_manipulator(shift_key_code)
       {
         :type => "basic",
         :from => {
@@ -123,32 +131,32 @@ class KarabinerComplexMod
           }
         ],
       }.then do |h|
-        add_hash_node(:conditions, :apple_keyboard_conditions, h)
+        add_hash_node(:conditions, :build_apple_keyboard_conditions, h)
       end
     end
 
-    def both_shifts_to_capslock_rule
+    def build_both_shifts_to_capslock_rule
       {
         :description => "MBP Only: LS + RS = CapsLock",
         :manipulators => [
-          both_shifts_to_capslock_manipulator(:left_shift),
-          both_shifts_to_capslock_manipulator(:right_shift)
+          build_shift_to_capslock_manipulator(:left_shift),
+          build_shift_to_capslock_manipulator(:right_shift)
         ]
       }
     end
 
   public
 
-    def generate
+    def build_complex_mod
       {
         :title => "Only modify Macbook Pro built in keyboard",
         :rules => [
-          capslock_to_esc_and_control_rule,
-          shift_keys_parens_on_tap_rule,
-          both_shifts_to_capslock_rule
+          build_capslock_to_esc_and_control_rule,
+          build_shift_keys_parens_on_tap_rule,
+          build_both_shifts_to_capslock_rule
         ]
       }
     end
 end
 
-puts JSON.pretty_generate(KarabinerComplexMod.new.generate)
+puts JSON.pretty_generate(KarabinerComplexMod.new.build_complex_mod)
