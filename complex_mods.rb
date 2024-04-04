@@ -53,7 +53,43 @@ class KarabinerComplexMod
                 :key_code => "escape"
               }
             ]
-          }.then { |h| add_hash_node(:conditions, :apple_keyboard_conditions, h) }
+          }.then do |h|
+              add_hash_node(:conditions, :apple_keyboard_conditions, h)
+          end
+        ]
+      }
+    end
+
+    def shift_keys_parens_on_tap_manipulator(from_key_code, to_key_code)
+      {
+        :type => "basic",
+        :from => {
+          :key_code => from_key_code
+        },
+        :to => [
+          {
+            :key_code => from_key_code
+          }
+        ],
+        :to_if_alone => [
+          {
+            :key_code => to_key_code,
+            :modifiers => [
+              from_key_code
+            ]
+          }
+        ],
+      }.then do |h|
+        add_hash_node(:conditions, :apple_keyboard_conditions, h)
+      end
+    end
+
+    def shift_keys_parens_on_tap_rule
+      {
+        :description => "MBP Only: Shift keys are parens on tap",
+        :manipulators => [
+          shift_keys_parens_on_tap_manipulator(:left_shift, "9"),
+          shift_keys_parens_on_tap_manipulator(:right_shift, "0")
         ]
       }
     end
@@ -65,49 +101,7 @@ class KarabinerComplexMod
         :title => "Only modify Macbook Pro built in keyboard",
         :rules => [
           capslock_to_esc_and_control_rule,
-          {
-            :description => "MBP Only: Shift keys are parens on tap",
-            :manipulators => [
-              {
-                :type => "basic",
-                :from => {
-                  :key_code => "left_shift"
-                },
-                :to => [
-                  {
-                    :key_code => "left_shift"
-                  }
-                ],
-                :to_if_alone => [
-                  {
-                    :key_code => "9",
-                    :modifiers => [
-                      "left_shift"
-                    ]
-                  }
-                ],
-              }.then { |h| add_hash_node(:conditions, :apple_keyboard_conditions, h) },
-              {
-                :type => "basic",
-                :from => {
-                  :key_code => "right_shift"
-                },
-                :to => [
-                  {
-                    :key_code => "right_shift"
-                  }
-                ],
-                :to_if_alone => [
-                  {
-                    :key_code => "0",
-                    :modifiers => [
-                      "right_shift"
-                    ]
-                  }
-                ],
-              }.then { |h| add_hash_node(:conditions, :apple_keyboard_conditions, h) }
-            ]
-          },
+          shift_keys_parens_on_tap_rule,
           {
             :description => "MBP Only: LS + RS = CapsLock",
             :manipulators => [
@@ -117,7 +111,7 @@ class KarabinerComplexMod
                   :key_code => "left_shift",
                   :modifiers => {
                     :mandatory => [
-                      "right_shift"
+                      :right_shift
                     ],
                     :optional => [
                       "caps_lock"
@@ -138,7 +132,7 @@ class KarabinerComplexMod
               {
                 :type => "basic",
                 :from => {
-                  :key_code => "right_shift",
+                  :key_code => :right_shift,
                   :modifiers => {
                     :mandatory => [
                       "left_shift"
@@ -155,7 +149,7 @@ class KarabinerComplexMod
                 ],
                 :to_if_alone => [
                   {
-                    :key_code => "right_shift"
+                    :key_code => :right_shift
                   }
                 ],
               }.then { |h| add_hash_node(:conditions, :apple_keyboard_conditions, h) }
