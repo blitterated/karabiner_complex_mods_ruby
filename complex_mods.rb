@@ -6,13 +6,6 @@ class KarabinerComplexMod
 
   private
 
-    def add_hash_node(key, method, hash)
-       return hash unless self.private_methods.include?(method)
-       hash[key] = send method
-       hash
-    end
-
-    # TODO: 835 is actually "product_id"
     def build_apple_keyboard_conditions
       [
         {
@@ -22,7 +15,7 @@ class KarabinerComplexMod
               :vendor_id => 1452
             },
             {
-              :vendor_id => 835
+              :product_id => 835
             }
           ]
         }
