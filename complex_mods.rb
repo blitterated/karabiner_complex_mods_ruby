@@ -2,6 +2,32 @@
 
 require 'json'
 
+class Hash
+  def store_local_var(key, vsymbol, caller_binding)
+    return nil unless caller_binding.local_variable_defined?(vsymbol)
+    
+    value = caller_binding.local_variable_get(vsymbol)
+    self.store(key,value)
+    self
+  end
+end
+
+# TODO: 835 is actually "product_id"
+apple_keyboard_conditions = [
+  {
+    :type => "device_if",
+    :identifiers => [
+      {
+        :vendor_id => 1452
+      },
+      {
+        :vendor_id => 835
+      }
+    ]
+  }
+]
+
+
 complex_mods = {
   :title => "Only modify Macbook Pro built in keyboard",
   :rules => [
@@ -27,21 +53,8 @@ complex_mods = {
             {
               :key_code => "escape"
             }
-          ],
-          :conditions => [
-            {
-              :type => "device_if",
-              :identifiers => [
-                {
-                  :vendor_id => 1452
-                },
-                {
-                  :vendor_id => 835
-                }
-              ]
-            }
           ]
-        }
+        }.store_local_var(:conditions, :apple_keyboard_conditions, binding)
       ]
     },
     {
@@ -65,20 +78,7 @@ complex_mods = {
               ]
             }
           ],
-          :conditions => [
-            {
-              :type => "device_if",
-              :identifiers => [
-                {
-                  :vendor_id => 1452
-                },
-                {
-                  :vendor_id => 835
-                }
-              ]
-            }
-          ]
-        },
+        }.store_local_var(:conditions, :apple_keyboard_conditions, binding),
         {
           :type => "basic",
           :from => {
@@ -97,20 +97,7 @@ complex_mods = {
               ]
             }
           ],
-          :conditions => [
-            {
-              :type => "device_if",
-              :identifiers => [
-                {
-                  :vendor_id => 1452
-                },
-                {
-                  :vendor_id => 835
-                }
-              ]
-            }
-          ]
-        }
+        }.store_local_var(:conditions, :apple_keyboard_conditions, binding)
       ]
     },
     {
@@ -139,20 +126,7 @@ complex_mods = {
               :key_code => "left_shift"
             }
           ],
-          :conditions => [
-            {
-              :type => "device_if",
-              :identifiers => [
-                {
-                  :vendor_id => 1452
-                },
-                {
-                  :vendor_id => 835
-                }
-              ]
-            }
-          ]
-        },
+        }.store_local_var(:conditions, :apple_keyboard_conditions, binding),
         {
           :type => "basic",
           :from => {
@@ -176,20 +150,7 @@ complex_mods = {
               :key_code => "right_shift"
             }
           ],
-          :conditions => [
-            {
-              :type => "device_if",
-              :identifiers => [
-                {
-                  :vendor_id => 1452
-                },
-                {
-                  :vendor_id => 835
-                }
-              ]
-            }
-          ]
-        }
+        }.store_local_var(:conditions, :apple_keyboard_conditions, binding)
       ]
     }
   ]
