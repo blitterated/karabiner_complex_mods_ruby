@@ -1,40 +1,42 @@
 #!/usr/bin/env ruby
 
-complex_mods = %Q({
-  "title": "Only modify Macbook Pro built in keyboard",
-  "rules": [
+require 'json'
+
+complex_mods = {
+  :title => "Only modify Macbook Pro built in keyboard",
+  :rules => [
     {
-      "description": "MBP Only: CapsLock is Esc on tap, Ctrl on mod",
-      "manipulators": [
+      :description => "MBP Only: CapsLock is Esc on tap, Ctrl on mod",
+      :manipulators => [
         {
-          "type": "basic",
-          "from": {
-            "key_code": "caps_lock",
-            "modifiers": {
-              "optional": [
+          :type => "basic",
+          :from => {
+            :key_code => "caps_lock",
+            :modifiers => {
+              :optional => [
                 "any"
               ]
             }
           },
-          "to": [
+          :to => [
             {
-              "key_code": "left_control"
+              :key_code => "left_control"
             }
           ],
-          "to_if_alone": [
+          :to_if_alone => [
             {
-              "key_code": "escape"
+              :key_code => "escape"
             }
           ],
-          "conditions": [
+          :conditions => [
             {
-              "type": "device_if",
-              "identifiers": [
+              :type => "device_if",
+              :identifiers => [
                 {
-                  "vendor_id": 1452
+                  :vendor_id => 1452
                 },
                 {
-                  "vendor_id": 835
+                  :vendor_id => 835
                 }
               ]
             }
@@ -43,67 +45,67 @@ complex_mods = %Q({
       ]
     },
     {
-      "description": "MBP Only: Shift keys are parens on tap",
-      "manipulators": [
+      :description => "MBP Only: Shift keys are parens on tap",
+      :manipulators => [
         {
-          "type": "basic",
-          "from": {
-            "key_code": "left_shift"
+          :type => "basic",
+          :from => {
+            :key_code => "left_shift"
           },
-          "to": [
+          :to => [
             {
-              "key_code": "left_shift"
+              :key_code => "left_shift"
             }
           ],
-          "to_if_alone": [
+          :to_if_alone => [
             {
-              "key_code": "9",
-              "modifiers": [
+              :key_code => "9",
+              :modifiers => [
                 "left_shift"
               ]
             }
           ],
-          "conditions": [
+          :conditions => [
             {
-              "type": "device_if",
-              "identifiers": [
+              :type => "device_if",
+              :identifiers => [
                 {
-                  "vendor_id": 1452
+                  :vendor_id => 1452
                 },
                 {
-                  "vendor_id": 835
+                  :vendor_id => 835
                 }
               ]
             }
           ]
         },
         {
-          "type": "basic",
-          "from": {
-            "key_code": "right_shift"
+          :type => "basic",
+          :from => {
+            :key_code => "right_shift"
           },
-          "to": [
+          :to => [
             {
-              "key_code": "right_shift"
+              :key_code => "right_shift"
             }
           ],
-          "to_if_alone": [
+          :to_if_alone => [
             {
-              "key_code": "0",
-              "modifiers": [
+              :key_code => "0",
+              :modifiers => [
                 "right_shift"
               ]
             }
           ],
-          "conditions": [
+          :conditions => [
             {
-              "type": "device_if",
-              "identifiers": [
+              :type => "device_if",
+              :identifiers => [
                 {
-                  "vendor_id": 1452
+                  :vendor_id => 1452
                 },
                 {
-                  "vendor_id": 835
+                  :vendor_id => 835
                 }
               ]
             }
@@ -112,77 +114,77 @@ complex_mods = %Q({
       ]
     },
     {
-      "description": "MBP Only: LS + RS = CapsLock",
-      "manipulators": [
+      :description => "MBP Only: LS + RS = CapsLock",
+      :manipulators => [
         {
-          "type": "basic",
-          "from": {
-            "key_code": "left_shift",
-            "modifiers": {
-              "mandatory": [
+          :type => "basic",
+          :from => {
+            :key_code => "left_shift",
+            :modifiers => {
+              :mandatory => [
                 "right_shift"
               ],
-              "optional": [
+              :optional => [
                 "caps_lock"
               ]
             }
           },
-          "to": [
+          :to => [
             {
-              "key_code": "caps_lock"
+              :key_code => "caps_lock"
             }
           ],
-          "to_if_alone": [
+          :to_if_alone => [
             {
-              "key_code": "left_shift"
+              :key_code => "left_shift"
             }
           ],
-          "conditions": [
+          :conditions => [
             {
-              "type": "device_if",
-              "identifiers": [
+              :type => "device_if",
+              :identifiers => [
                 {
-                  "vendor_id": 1452
+                  :vendor_id => 1452
                 },
                 {
-                  "vendor_id": 835
+                  :vendor_id => 835
                 }
               ]
             }
           ]
         },
         {
-          "type": "basic",
-          "from": {
-            "key_code": "right_shift",
-            "modifiers": {
-              "mandatory": [
+          :type => "basic",
+          :from => {
+            :key_code => "right_shift",
+            :modifiers => {
+              :mandatory => [
                 "left_shift"
               ],
-              "optional": [
+              :optional => [
                 "caps_lock"
               ]
             }
           },
-          "to": [
+          :to => [
             {
-              "key_code": "caps_lock"
+              :key_code => "caps_lock"
             }
           ],
-          "to_if_alone": [
+          :to_if_alone => [
             {
-              "key_code": "right_shift"
+              :key_code => "right_shift"
             }
           ],
-          "conditions": [
+          :conditions => [
             {
-              "type": "device_if",
-              "identifiers": [
+              :type => "device_if",
+              :identifiers => [
                 {
-                  "vendor_id": 1452
+                  :vendor_id => 1452
                 },
                 {
-                  "vendor_id": 835
+                  :vendor_id => 835
                 }
               ]
             }
@@ -191,6 +193,6 @@ complex_mods = %Q({
       ]
     }
   ]
-})
+}
 
-puts complex_mods
+puts JSON.pretty_generate complex_mods
