@@ -36,7 +36,7 @@ class KarabinerComplexMod
           {
             :type => "basic",
             :from => {
-              :key_code => "caps_lock",
+              :key_code => :caps_lock,
               :modifiers => {
                 :optional => [
                   "any"
@@ -94,6 +94,49 @@ class KarabinerComplexMod
       }
     end
 
+    def both_shifts_to_capslock_manipulator(shift_key_code)
+      {
+        :type => "basic",
+        :from => {
+          :key_code => shift_key_code,
+          :modifiers => {
+            :mandatory => [
+              case shift_key_code
+              when :left_shift;   :right_shift
+              when :right_shift;  :left_shift
+              else ;              throw "Not a shift key: #{shift_key_code}"
+              end
+            ],
+            :optional => [
+              :caps_lock
+            ]
+          }
+        },
+        :to => [
+          {
+            :key_code => :caps_lock
+          }
+        ],
+        :to_if_alone => [
+          {
+            :key_code => shift_key_code
+          }
+        ],
+      }.then do |h|
+        add_hash_node(:conditions, :apple_keyboard_conditions, h)
+      end
+    end
+
+    def both_shifts_to_capslock_rule
+      {
+        :description => "MBP Only: LS + RS = CapsLock",
+        :manipulators => [
+          both_shifts_to_capslock_manipulator(:left_shift),
+          both_shifts_to_capslock_manipulator(:right_shift)
+        ]
+      }
+    end
+
   public
 
     def generate
@@ -102,59 +145,7 @@ class KarabinerComplexMod
         :rules => [
           capslock_to_esc_and_control_rule,
           shift_keys_parens_on_tap_rule,
-          {
-            :description => "MBP Only: LS + RS = CapsLock",
-            :manipulators => [
-              {
-                :type => "basic",
-                :from => {
-                  :key_code => "left_shift",
-                  :modifiers => {
-                    :mandatory => [
-                      :right_shift
-                    ],
-                    :optional => [
-                      "caps_lock"
-                    ]
-                  }
-                },
-                :to => [
-                  {
-                    :key_code => "caps_lock"
-                  }
-                ],
-                :to_if_alone => [
-                  {
-                    :key_code => "left_shift"
-                  }
-                ],
-              }.then { |h| add_hash_node(:conditions, :apple_keyboard_conditions, h) },
-              {
-                :type => "basic",
-                :from => {
-                  :key_code => :right_shift,
-                  :modifiers => {
-                    :mandatory => [
-                      "left_shift"
-                    ],
-                    :optional => [
-                      "caps_lock"
-                    ]
-                  }
-                },
-                :to => [
-                  {
-                    :key_code => "caps_lock"
-                  }
-                ],
-                :to_if_alone => [
-                  {
-                    :key_code => :right_shift
-                  }
-                ],
-              }.then { |h| add_hash_node(:conditions, :apple_keyboard_conditions, h) }
-            ]
-          }
+          both_shifts_to_capslock_rule
         ]
       }
     end
