@@ -68,36 +68,42 @@ class KarabinerComplexMod
       }
     end
 
-    def build_shift_keys_parens_on_tap_manipulator(from_key_code, to_key_code)
-      {
-        :type => "basic",
-        :from => {
-          :key_code => from_key_code
-        },
-        :to => [
-          {
-            :key_code => from_key_code
-          }
-        ],
-        :to_if_alone => [
-          {
-            :key_code => to_key_code,
-            :modifiers => [
-              from_key_code
-            ]
-          }
-        ],
-      }.then do |h|
-        add_hash_node(:conditions, :build_apple_keyboard_conditions, h)
-      end
-    end
+#   def build_shift_keys_parens_on_tap_manipulator(from_key_code, to_key_code)
+#     {
+#       :type => "basic",
+#       :from => {
+#         :key_code => from_key_code
+#       },
+#       :to => [
+#         {
+#           :key_code => from_key_code
+#         }
+#       ],
+#       :to_if_alone => [
+#         {
+#           :key_code => to_key_code,
+#           :modifiers => [
+#             from_key_code
+#           ]
+#         }
+#       ],
+#     }.then do |h|
+#       add_hash_node(:conditions, :build_apple_keyboard_conditions, h)
+#     end
+#   end
 
     def build_shift_keys_parens_on_tap_rule
+
+      left_target =        build_manipulator_target(:left_shift)
+      left_alone_target =  build_manipulator_target("9", [:left_shift])
+      right_target =       build_manipulator_target(:right_shift)
+      right_alone_target = build_manipulator_target("0", [:right_shift])
+
       {
         :description => "MBP Only: Shift keys are parens on tap",
         :manipulators => [
-          build_shift_keys_parens_on_tap_manipulator(:left_shift, "9"),
-          build_shift_keys_parens_on_tap_manipulator(:right_shift, "0")
+          build_basic_to_if_alone_manipulator(left_target, [left_target], [left_alone_target]),
+          build_basic_to_if_alone_manipulator(right_target, [right_target], [right_alone_target])
         ]
       }
     end
